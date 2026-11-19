@@ -63,9 +63,10 @@
 
 - 本地：已 `git init` 并完成多次提交，全部文本文件（含 `queue/verse-huozhe.json`、`douyin/发布包_活着.md`）纳入版本管理，`out/`、`work/`、`vendor/`、`assets/` 及媒体文件由 `.gitignore` 排除。改动通过 `py_compile` 与 JSON 解析校验。工作区干净，随时可推送。
 - 远程：**两次**尝试创建私有仓库均返回 `403 Resource not accessible by integration`；同一时刻 `get_me` 与公开仓库搜索均正常、`public_repos` 仍为 0。判定为 GitHub App 安装权限（integration）只放开读，缺少 Administration / Contents 写权限 —— 不是连接掉线，也不是本地可绕过。
-- 打通方式二选一：
-  1. GitHub → Settings → Applications → 对应 App → Configure，放开 **Administration: write** 与 **Contents: write** 后让我重试；
-  2. 在 GitHub 网页手动建空仓库，或用本地 git + Personal Access Token 直接推送：`git remote add origin https://github.com/<you>/<repo>.git && git push -u origin HEAD`（令牌只在命令行临时使用，不要写进任何文件）。
+- **根因已查证（GitHub 官方社区与 API 文档）**：`POST /user/repos`（创建个人仓库）对 GitHub App 安装令牌标记为 `enabledForApps: false`，无论 `administration: write` 开多大都会返回这个 403，必须用 user-to-server OAuth 或 PAT。**所以让我重试建仓库没有意义**，不要再试第三次。
+- 可行路径（二选一）：
+  1. 你在 GitHub 网页手动建一个空仓库（建议私有），把仓库名告诉我 → 我用连接器把本地 63 个文件推进去（需 `Contents: write`；文件写入属 App 支持的端点）；
+  2. 本地 git + Personal Access Token 直推：`git remote add origin https://github.com/<you>/<repo>.git && git push -u origin HEAD`（令牌只在命令行临时使用，不要写进任何文件）。
 - 结论未变：连接器不碰视频画面，它负责把改动变成可 diff、可回滚的版本历史。
 
 **本次已交付成片**：`out/verse-huozhe.mp4`（《活着》35.7 秒）、`douyin/封面_活着_3x4.png`、`douyin/发布包_活着.md`。该片走 `verse.py` 自带的 `crf 12 / slow / tune stillimage` 链路，不受上文通用链路参数改动影响。
