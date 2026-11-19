@@ -59,8 +59,13 @@
 
 本次改动即按此路径提交，仓库里记录的是「让视频变好」的那次代码变更，而不是视频文件本身。
 
-**当前进度与阻塞**（2026-11-19）：
+**当前进度与阻塞**（2026-11-19 10:2x 复核）：
 
-- 本地：已 `git init` 并完成首次提交 `0d3ce4c`，61 个文本文件纳入版本管理，`out/`、`work/`、`vendor/`、`assets/` 及所有媒体文件由 `.gitignore` 排除。改动通过 `py_compile` 与 JSON 解析校验。
-- 远程：调用 GitHub 连接器创建私有仓库返回 `403 Resource not accessible by integration` —— 当前 GitHub App 授权范围只放开读，没有「创建仓库 / 写」权限。需要账号侧放宽授权，或在 GitHub 网页手动建一个空仓库后由连接器推送文件。
+- 本地：已 `git init` 并完成多次提交，全部文本文件（含 `queue/verse-huozhe.json`、`douyin/发布包_活着.md`）纳入版本管理，`out/`、`work/`、`vendor/`、`assets/` 及媒体文件由 `.gitignore` 排除。改动通过 `py_compile` 与 JSON 解析校验。工作区干净，随时可推送。
+- 远程：**两次**尝试创建私有仓库均返回 `403 Resource not accessible by integration`；同一时刻 `get_me` 与公开仓库搜索均正常、`public_repos` 仍为 0。判定为 GitHub App 安装权限（integration）只放开读，缺少 Administration / Contents 写权限 —— 不是连接掉线，也不是本地可绕过。
+- 打通方式二选一：
+  1. GitHub → Settings → Applications → 对应 App → Configure，放开 **Administration: write** 与 **Contents: write** 后让我重试；
+  2. 在 GitHub 网页手动建空仓库，或用本地 git + Personal Access Token 直接推送：`git remote add origin https://github.com/<you>/<repo>.git && git push -u origin HEAD`（令牌只在命令行临时使用，不要写进任何文件）。
 - 结论未变：连接器不碰视频画面，它负责把改动变成可 diff、可回滚的版本历史。
+
+**本次已交付成片**：`out/verse-huozhe.mp4`（《活着》35.7 秒）、`douyin/封面_活着_3x4.png`、`douyin/发布包_活着.md`。该片走 `verse.py` 自带的 `crf 12 / slow / tune stillimage` 链路，不受上文通用链路参数改动影响。
