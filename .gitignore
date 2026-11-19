@@ -1,0 +1,25 @@
+# 中间产物与成片（体积大、可再生，不入库）
+out/
+work/
+
+# 第三方二进制
+vendor/
+__pycache__/
+*.pyc
+
+# 素材与字体（含第三方授权文件，本地保留即可）
+assets/
+
+# 常见媒体文件
+*.mp4
+*.mov
+*.mkv
+*.png
+*.jpg
+*.jpeg
+*.wav
+*.mp3
+*.m4a
+*.ttf
+*.otf
+.DS_Store
