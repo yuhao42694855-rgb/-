@@ -66,13 +66,13 @@
 - **写权限已验证通过**：连接器 `push_files` 成功创建 `refs/heads/main` 与初始提交 `c6e4017`（内容仅 `.gitignore`），返回 `push: true`。说明此前 403 只针对「创建仓库」端点，不涉及文件写入。
 - **原建仓 403 的根因**（GitHub 官方 API 文档）：`POST /user/repos`（创建个人仓库）对 GitHub App 安装令牌标记为 `enabledForApps: false`，权限开多大都建不了，必须用 user-to-server OAuth 或 PAT。不要再尝试第三次。
 
-**剩余阻塞（技术性质，非权限问题）**：
+**推送完成**（2026-11-19 11:05）：
 
-连接器是「逐文件、内容即参数」的 API：63 个文件共 469,715 字节，若逐个经手转写，Python 脚本（尤其 `flow.py` 71 KB、`verse.py` 28 KB）极易出现字节级失真，推上去的代码反而不可信；而本机没有 `gh`、没有 PAT、没有 credential helper，暂时走不了 `git push` 协议。两条收尾路径：
-
-1. **推荐**：在 GitHub 网页生成一个仅勾选 `repo` 的 Personal Access Token，用它跑一次 `git push`（令牌只在当次命令的环境变量里使用，不写入任何文件、不回显）。这样 63 个文件与本地 4 次提交历史字节级一致、一次到位；远程已有的探针提交用 `git merge -s ours --allow-unrelated-histories` 并回，无需强推。
-2. 不用令牌：把 63 个文件按原目录结构整理成一个待上传文件夹，由用户在 GitHub 网页拖拽上传，文件字节一致但只产生 1 个提交、不带本地历史。
-
-结论未变：连接器不碰视频画面，它负责把改动变成可 diff、可回滚的版本历史。
+- 用户提供了仅勾 `repo` 的短期 PAT，用 `git -c http.extraheader=… push origin master:main` 一次完成。令牌只在当次命令的环境变量里使用，未写入任何文件、未回显，用完建议立即在网页 Revoke。
+- 首次 `git fetch` 遇代理 `502 CONNECT tunnel failed`，带认证重试即恢复；远程那个 `.gitignore` 探针提交用 `git merge -s ours --allow-unrelated-histories` 并入，**没有强推**。
+- 最终合并提交 `8fa754a`，远程 `main` 与本地 HEAD 的 tree hash 同为 `cbdd9131…`，即 63 个文件与本地提交版本完全一致。git 按 `core.autocrlf` 把工作区 CRLF 规范化为 LF 入库，所以远程文件字节数比工作区略小，属正常，不影响内容。
+- 连接器独立复核通过：根目录 9 个文件 + `scripts/` `queue/` `douyin/` 三个目录齐全，`scripts/` 下 12 个脚本均可读取；提交历史完整保留（GitHub 初始提交、探针提交、本地 5 次提交、合并提交）。
+- 结论未变：连接器不碰视频画面，它负责把改动变成可 diff、可回滚的版本历史。
+- 仍可优化：仓库当前是 **public**、标识为 `-`（中文名被过滤）。如需改名或改私有，在网页 Settings 操作，改完同步更新本地 `origin`。
 
 **本次已交付成片**：`out/verse-huozhe.mp4`（《活着》35.7 秒）、`douyin/封面_活着_3x4.png`、`douyin/发布包_活着.md`。该片走 `verse.py` 自带的 `crf 12 / slow / tune stillimage` 链路，不受上文通用链路参数改动影响。
