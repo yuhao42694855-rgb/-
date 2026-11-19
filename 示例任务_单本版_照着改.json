@@ -1,0 +1,39 @@
+{
+ "_填写说明": {
+  "一句话": "只给一个书名就能出片；作者、内容核实、文案、画面、配音、字幕、成片由 WorkBuddy 全部完成",
+  "最小输入": "book：书名。连 JSON 都不用填，直接把书名发给我即可",
+  "必填": "book、author；hook / quotes / insight / tail 由 AI 撰写并逐条核实",
+  "两种卡片写法": "quotes 填核实到原文的书中金句 → card_label 填「金句」；quotes 填情节概述（推荐，不编造原文）→ card_label 填「书中」或「情节」",
+  "quotes": "4-5 句，每句 18-30 字；四张情节卡 + 一句立意是近期跑通的结构",
+  "insight": "全片唯一的观点句，放在情节卡之后、结尾提问之前；留空则不出立意卡",
+  "tail": "5-12 字提问；结尾卡大字自动取这个问句，务必与画面一致",
+  "theme": "ink 深墨金 / paper 旧纸墨字 / forest 深绿 / plum 暗红 / night 深蓝 / dawn 暖白；浅底会自动切换深色字与字幕",
+  "id": "英文小写+数字，决定成片文件名（如 story-huozhe）",
+  "结构": "封面(hook) → 4-5 张卡 → 立意卡 → 结尾卡，成片压在 28-35 秒",
+  "已验证参考": "queue/story-moon-v2.json（换角度+立意）、queue/hot-2026-byron.json（追热点+数字钩子）；7 条历史任务都在 queue/",
+  "发布信息": "title / tags / desc 会写进 work/<id>/meta.json，发抖音时可直接抄",
+  "当前日更模式": "本文件是早期 story 单本模板；账号现固定使用 verse 金句卡点模式，字段请以 queue/verse-dongpo.json 为准（含 hook_type / hook_line / cover_sub / save_line / bg_offset / en）。verse 模式文案全自写、不引在版书原文，示例里的 quotes 原文金句写法已废弃，勿照抄",
+  "规则库": "douyin/日更规范.md、douyin/爆款手册.md、douyin/爆款案例库.md"
+ },
+ "id": "story-huozhe-example",
+ "title": "这本书我劝你读懂再哭",
+ "on_screen_title": "",
+ "cover_text": "",
+ "book": "活着",
+ "author": "余华",
+ "theme": "ink",
+ "card_label": "金句",
+ "insight_label": "读完之后",
+ "hook": "有本书我读了三遍，每一遍都在不同的地方哭了。",
+ "quotes": [
+  "人是为活着本身而活着，而不是为了活着之外的任何事物。",
+  "你千万别糊涂，死人都还想活过来，你一个大活人可不能去死。",
+  "少年去游荡，中年想掘藏，老年做和尚。",
+  "没有什么比时间更具有说服力，因为时间无需通知我们就可以改变一切。",
+  "生活是属于每个人自己的感受，不属于任何别人的看法。"
+ ],
+ "insight": "",
+ "tail": "哪一句戳中了你？评论区告诉我",
+ "tags": ["#好书推荐", "#读书", "#书单", "#活着"],
+ "desc": "《活着》余华。读懂了再哭。"
+}

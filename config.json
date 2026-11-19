@@ -1,0 +1,26 @@
+{
+ "voice": "zh-CN-XiaoxiaoNeural",
+ "rate": "+8%",
+ "pitch": "+0Hz",
+ "sub_per_line": 9,
+ "bgm_gain": 0.15,
+ "clip_min": 3.0,
+ "clip_max": 6.5,
+ "mode": "auto",
+ "theme": "ink",
+ "brand": "书单推荐",
+ "crf": 18,
+ "preset": "medium",
+ "_notes": {
+  "crf": "成片编码质量，数字越小越清晰。原默认 21（偏糊），建议 16-18；改回 21 即恢复旧行为",
+  "preset": "编码预设，medium 压缩效率优于 veryfast、体积更划算；追求速度可改回 veryfast",
+  "voice": "音色：zh-CN-XiaoxiaoNeural(女) / zh-CN-YunxiNeural(男) / zh-CN-YunjianNeural(男-激情) / zh-CN-XiaoyiNeural(女-年轻)",
+  "rate": "语速，书单号建议 +6% 到 +12%",
+  "sub_per_line": "每行字幕字数，9-11 比较稳",
+  "bgm_gain": "BGM 音量，0.10-0.18 之间，别盖过人声",
+  "clip_min_max": "混剪模式下每个片段的秒数范围",
+  "mode": "auto=有素材就混剪、没素材用卡片；card=只出卡片；mix=只混剪",
+  "theme": "卡片配色：ink / paper / forest / plum / night / dawn（浅色主题会自动把正文和字幕切成深色）",
+  "brand": "卡片右下角的水印文字，留空则不显示"
+ }
+}
