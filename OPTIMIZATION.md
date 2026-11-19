@@ -59,14 +59,20 @@
 
 本次改动即按此路径提交，仓库里记录的是「让视频变好」的那次代码变更，而不是视频文件本身。
 
-**当前进度与阻塞**（2026-11-19 10:2x 复核）：
+**当前进度**（2026-11-19 10:36 复核）：
 
-- 本地：已 `git init` 并完成多次提交，全部文本文件（含 `queue/verse-huozhe.json`、`douyin/发布包_活着.md`）纳入版本管理，`out/`、`work/`、`vendor/`、`assets/` 及媒体文件由 `.gitignore` 排除。改动通过 `py_compile` 与 JSON 解析校验。工作区干净，随时可推送。
-- 远程：**两次**尝试创建私有仓库均返回 `403 Resource not accessible by integration`；同一时刻 `get_me` 与公开仓库搜索均正常、`public_repos` 仍为 0。判定为 GitHub App 安装权限（integration）只放开读，缺少 Administration / Contents 写权限 —— 不是连接掉线，也不是本地可绕过。
-- **根因已查证（GitHub 官方社区与 API 文档）**：`POST /user/repos`（创建个人仓库）对 GitHub App 安装令牌标记为 `enabledForApps: false`，无论 `administration: write` 开多大都会返回这个 403，必须用 user-to-server OAuth 或 PAT。**所以让我重试建仓库没有意义**，不要再试第三次。
-- 可行路径（二选一）：
-  1. 你在 GitHub 网页手动建一个空仓库（建议私有），把仓库名告诉我 → 我用连接器把本地 63 个文件推进去（需 `Contents: write`；文件写入属 App 支持的端点）；
-  2. 本地 git + Personal Access Token 直推：`git remote add origin https://github.com/<you>/<repo>.git && git push -u origin HEAD`（令牌只在命令行临时使用，不要写进任何文件）。
-- 结论未变：连接器不碰视频画面，它负责把改动变成可 diff、可回滚的版本历史。
+- 本地：已 `git init` 并完成 4 次提交（`0d3ce4c` → `c23feba`），63 个文本文件共 469,715 字节纳入版本管理，`out/`、`work/`、`vendor/`、`assets/` 及媒体文件由 `.gitignore` 排除。改动通过 `py_compile` 与 JSON 解析校验，工作区干净。`origin` 已配置，`git ls-remote` 匿名连通正常。
+- 远程：用户已在 GitHub 网页创建空仓库。API 实测 `full_name = yuhao42694855-rgb/-`，描述「丰富视频资源和内容」，默认分支 `main`，`size = 0`（未勾 README，符合要求），`private = false`（**当前为公开仓库**）。网页填写的「第一视频库」未成为仓库名 —— GitHub 仓库名只接受字母、数字、`.`、`-`、`_`，中文会被过滤；如需改名可在网页 Settings → Repository name 修改。
+- **写权限已验证通过**：连接器 `push_files` 成功创建 `refs/heads/main` 与初始提交 `c6e4017`（内容仅 `.gitignore`），返回 `push: true`。说明此前 403 只针对「创建仓库」端点，不涉及文件写入。
+- **原建仓 403 的根因**（GitHub 官方 API 文档）：`POST /user/repos`（创建个人仓库）对 GitHub App 安装令牌标记为 `enabledForApps: false`，权限开多大都建不了，必须用 user-to-server OAuth 或 PAT。不要再尝试第三次。
+
+**剩余阻塞（技术性质，非权限问题）**：
+
+连接器是「逐文件、内容即参数」的 API：63 个文件共 469,715 字节，若逐个经手转写，Python 脚本（尤其 `flow.py` 71 KB、`verse.py` 28 KB）极易出现字节级失真，推上去的代码反而不可信；而本机没有 `gh`、没有 PAT、没有 credential helper，暂时走不了 `git push` 协议。两条收尾路径：
+
+1. **推荐**：在 GitHub 网页生成一个仅勾选 `repo` 的 Personal Access Token，用它跑一次 `git push`（令牌只在当次命令的环境变量里使用，不写入任何文件、不回显）。这样 63 个文件与本地 4 次提交历史字节级一致、一次到位；远程已有的探针提交用 `git merge -s ours --allow-unrelated-histories` 并回，无需强推。
+2. 不用令牌：把 63 个文件按原目录结构整理成一个待上传文件夹，由用户在 GitHub 网页拖拽上传，文件字节一致但只产生 1 个提交、不带本地历史。
+
+结论未变：连接器不碰视频画面，它负责把改动变成可 diff、可回滚的版本历史。
 
 **本次已交付成片**：`out/verse-huozhe.mp4`（《活着》35.7 秒）、`douyin/封面_活着_3x4.png`、`douyin/发布包_活着.md`。该片走 `verse.py` 自带的 `crf 12 / slow / tune stillimage` 链路，不受上文通用链路参数改动影响。
